@@ -1,0 +1,10 @@
+{
+    "name": "Tab Manager (Testing)",
+    "version": "1.0",
+    "description": "Test extension code for use in the Tab Manager.",
+    "background": {
+      "scripts": ["background.js"],
+      "persistent": false
+    },
+    "manifest_version": 2
+}
