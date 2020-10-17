@@ -1,8 +1,5 @@
-let openTabsButton = document.getElementById("openTabsButton");
-openTabsButton.onclick = openTabs();
-
-function openTab(url) {
-	chrome.tabs.create({url:url});
+function openTab(tabUrl) {
+	chrome.tabs.create({url: tabUrl});
 }
 
 function loadJSON(callback) {   
@@ -19,14 +16,16 @@ function loadJSON(callback) {
     xobj.send(null);  
  }
 
-function openTabs() {
-	loadJSON(function(response) {
-  		// Parse JSON string into object
-    	var data = JSON.parse(response);
-    	var tabGroup = data.groups.g1;
-    	for (tab in tabGroup) {
-    		openTab(tab);
-    	}
-	});
-	
+window.onload = function() {
+    document.getElementById("openTabsButton").onclick = function openTabs() {
+    	loadJSON(function(response) {
+      		// Parse JSON string into object
+        	var data = JSON.parse(response);
+        	var tabGroup = data.groups.g1;
+        	for (tab of tabGroup) {
+        		openTab(tab);
+        	}
+    	});
+
+    }
 }
