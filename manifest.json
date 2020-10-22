@@ -4,7 +4,8 @@
     "description": "Test extension code for use in the Tab Manager.",
     "permissions": ["tabs",
                     "declarativeContent", 
-                    "storage"],
+                    "storage",
+                    "unlimitedStorage"],
     "background": {
       "scripts": ["background.js"],
       "persistent": false
