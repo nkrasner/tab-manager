@@ -1,16 +1,21 @@
   <!DOCTYPE html>
   <html>
     <head>
-      <style>
-        button {
-          height: 30px;
-          width: 30px;
-          outline: none;
-        }
-      </style>
+      <link rel="stylesheet" href="popup.css"></link>
     </head>
     <body>
-      <p>This is a button.</p>
-      <button id="itsabutton"></button>
+      <button id="addGroup">Add Group</button>
+      <p>Open a tab group.</p>
+      <div id="openGroupButtons"></div>
+	  <br>
+	  <p>Add URL to a group.</p>
+      <div id="AddURLButton"></div>
+	  <br>
+	  <p>Remove URL to a group.</p>
+      <div id="RemoveURLButton"></div>
+	  <br>
+	  <p>Remove a tab group.</p>
+	  <div id="removeGroupButton"></div>
+      <script src="popup.js"></script>
     </body>
   </html>
