@@ -1,7 +1,5 @@
 //Scripts for popups
-var checkAdd = false;
-var checkRemove = false;
-var checkDelete = false;
+
 
 //Opens a tab with the URL given
 function openTab(tabUrl) {
@@ -16,7 +14,19 @@ function openTabs(group) {
     }
 }
 
-//Checks if a group exists witha given name (asynchronous)
+//Checks if there are any tab groups that exist
+function areGroups(callback) {
+	chrome.storage.local.get("groups", function(data) {
+        areGroups = true;
+        let groupNames = Object.keys(data["groups"]);
+        if (groupNames.length == 0) {
+            areGroups = false;
+        }
+        callback(areGroups);
+    });
+}
+
+//Checks if a group exists with a given name (asynchronous)
 function isGroup(groupName, callback) {
     chrome.storage.local.get("groups", function(data) {
         isGroup = false;
@@ -91,6 +101,7 @@ function removeFromGroup(urls = "", groupName) {
             alert("There is no group with name: " + groupName);
         }
 	});
+}
 
 //Adds a group with the name and URLs(optional) given
 function addGroup(groupName, urls = "") {
@@ -118,7 +129,7 @@ function removeGroup(groupName) {
             chrome.storage.local.get("groups", function(data) {
                 //Pull group into groups
 				var newGroup = [];
-	            /*var list = Object.keys(data["groups"]);
+	            var list = Object.keys(data["groups"]);
 				for (name of list){
 					if (groupName === name){
 						continue;
@@ -128,8 +139,7 @@ function removeGroup(groupName) {
 					}
 				}
 				data["groups"] = newGroup;
-				if (newGroup.length == 0){checkDelete = false;}*/
-				data.groups[groupName] = []; 
+				if (newGroup.length == 0){checkDelete = false;} 
                 chrome.storage.local.set(data, function() {
                     console.log("Removed group: " + groupName);
                     //Reload the popup so the button will appear
@@ -150,18 +160,14 @@ window.onload = function load(){
         let groupName = window.prompt("Enter a group name.");
         let urls = window.prompt("Enter urls in quotes as a comma separated list.");
         //This requires the user to not make any mistakes or forget "https://""
-        urls = JSON.parse(['[' + urls + ']']);
+        urls = JSON.parse('[' + urls + ']');
         addGroup(groupName, urls);
-		checkAdd = true;
-		checkRemove = true;
-		checkDelete = true;
     };
     //Generate group buttons
     chrome.storage.local.get("groups", function(data) {
         let groups = data["groups"]; //Enter groups object
         let groupNames = Object.keys(groups);
         var openGroupButtons = document.getElementById("openGroupButtons");
-        var buttons = document.getElementById("openGroupButtons");
         for (groupName of groupNames) {
             /*Generate a button for each group with
             attributes corresponding to the group name*/
@@ -177,45 +183,53 @@ window.onload = function load(){
         }
     });
 	//Generate button to add url to group
-	if (true) {
-		let removeGroupButton = document.getElementById("AddURLButton");
-		var button = document.createElement("BUTTON");
-		button.innerText = 'add url';
-		removeGroupButton.appendChild(button);
-		button.onclick = function() {
-			let groupName = window.prompt("Enter a group name.");
-			let urls = window.prompt("Enter urls in quotes as a comma separated list.");
-			//This requires the user to not make any mistakes or forget "https://""
-			urls = JSON.parse(['[' + urls + ']']);
-			addToGroup(urls, groupName);
+	areGroups(function(areGroups) {
+		if (areGroups){
+			let removeGroupButton = document.getElementById("AddURLButton");
+			var button = document.createElement("BUTTON");
+			button.innerText = 'add url';
+			removeGroupButton.appendChild(button);
+			button.onclick = function() {
+				let groupName = window.prompt("Enter a group name.");
+				let urls = window.prompt("Enter urls in quotes as a comma separated list.");
+				//This requires the user to not make any mistakes or forget "https://""
+				urls = JSON.parse('[' + urls + ']');
+				addToGroup(urls, groupName);
+			}
 		}
-	}
+	});
 	//Generate button to remove url from group
-	if (true) {
-		let removeGroupButton = document.getElementById("RemoveURLButton");
-		var button = document.createElement("BUTTON");
-		button.innerText = 'remove url';
-		removeGroupButton.appendChild(button);
-		button.onclick = function() {
-			let groupName = window.prompt("Enter a group name.");
-			let urls = window.prompt("Enter urls in quotes as a comma separated list.");
-			urls = JSON.parse(['[' + urls + ']']);
-			removeFromGroup(urls, groupName);
+	areGroups(function(areGroups) {
+		if (areGroups === true){
+			let removeGroupButton = document.getElementById("RemoveURLButton");
+			var button = document.createElement("BUTTON");
+			button.innerText = 'remove url';
+			removeGroupButton.appendChild(button);
+			button.onclick = function() {
+				let groupName = window.prompt("Enter a group name.");
+				let urls = window.prompt("Enter urls in quotes as a comma separated list.");
+				urls = JSON.parse('[' + urls + ']');
+				removeFromGroup(urls, groupName);
+			}
 		}
-	}
+	});
 	//Generate button to remove group
-	if (true) {
-		let removeGroupButton = document.getElementById("removeGroupButton");
-		var button = document.createElement("BUTTON");
-		button.innerText = 'remove';
-		removeGroupButton.appendChild(button);
-		button.onclick = function() {
-			let groupName = window.prompt("Enter a group name.");
-			groupName = JSON.parse(groupName);
-			removeGroup(groupName);
+	areGroups(function(areGroups) {
+		if (areGroups === true){
+			let removeGroupButton = document.getElementById("removeGroupButton");
+			var button = document.createElement("BUTTON");
+			button.innerText = 'remove';
+			removeGroupButton.appendChild(button);
+			button.onclick = function() {
+				let groupName = window.prompt("Enter a group name.");
+				removeGroup(groupName);
+			}
 		}
-	}
+	});
 }
-        }
-    });
-}
+
+
+
+
+
+
