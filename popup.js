@@ -91,7 +91,6 @@ function removeFromGroup(urls = "", groupName) {
             alert("There is no group with name: " + groupName);
         }
 	});
-}
 
 //Adds a group with the name and URLs(optional) given
 function addGroup(groupName, urls = "") {
@@ -162,6 +161,7 @@ window.onload = function load(){
         let groups = data["groups"]; //Enter groups object
         let groupNames = Object.keys(groups);
         var openGroupButtons = document.getElementById("openGroupButtons");
+        var buttons = document.getElementById("openGroupButtons");
         for (groupName of groupNames) {
             /*Generate a button for each group with
             attributes corresponding to the group name*/
@@ -216,9 +216,6 @@ window.onload = function load(){
 		}
 	}
 }
-
-
-
-
-
-
+        }
+    });
+}
