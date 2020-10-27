@@ -91,6 +91,7 @@ function removeFromGroup(urls = "", groupName) {
             alert("There is no group with name: " + groupName);
         }
 	});
+}
 
 //Adds a group with the name and URLs(optional) given
 function addGroup(groupName, urls = "") {
@@ -150,7 +151,7 @@ window.onload = function load(){
         let groupName = window.prompt("Enter a group name.");
         let urls = window.prompt("Enter urls in quotes as a comma separated list.");
         //This requires the user to not make any mistakes or forget "https://""
-        urls = JSON.parse(['[' + urls + ']']);
+        urls = JSON.parse('[' + urls + ']');
         addGroup(groupName, urls);
 		checkAdd = true;
 		checkRemove = true;
@@ -186,9 +187,9 @@ window.onload = function load(){
 			let groupName = window.prompt("Enter a group name.");
 			let urls = window.prompt("Enter urls in quotes as a comma separated list.");
 			//This requires the user to not make any mistakes or forget "https://""
-			urls = JSON.parse(['[' + urls + ']']);
+			urls = JSON.parse('[' + urls + ']');
 			addToGroup(urls, groupName);
-		}
+		};
 	}
 	//Generate button to remove url from group
 	if (true) {
@@ -199,9 +200,9 @@ window.onload = function load(){
 		button.onclick = function() {
 			let groupName = window.prompt("Enter a group name.");
 			let urls = window.prompt("Enter urls in quotes as a comma separated list.");
-			urls = JSON.parse(['[' + urls + ']']);
+			urls = JSON.parse('[' + urls + ']');
 			removeFromGroup(urls, groupName);
-		}
+		};
 	}
 	//Generate button to remove group
 	if (true) {
@@ -213,9 +214,6 @@ window.onload = function load(){
 			let groupName = window.prompt("Enter a group name.");
 			groupName = JSON.parse(groupName);
 			removeGroup(groupName);
-		}
+		};
 	}
-}
-        }
-    });
-}
+};
