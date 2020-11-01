@@ -164,24 +164,6 @@ function removeGroup(groupName) {
     });
 }
 
-/*function sortGroups() {
-	chrome.storage.local.get("groups", function(data) {
-        let groups = data["groups"]; //Enter groups object
-        let groupNames = Object.keys(groups);
-		var sorted = [];
-		let GroupName;
-		for (groupName of groupNames) {
-			for (groupName2 of groupNames) {
-				if ((groupName.number < groupName2.number) && (!sorted.includes(groupName2))) {
-					groupName = groupName2;		
-				}
-			}
-			sorted.push(groupName);
-		}
-		return sorted;
-	});
-}*/
-
 //Things to do when the popup loads
 window.onload = function load(){
     //Listener for add group button
@@ -197,24 +179,33 @@ window.onload = function load(){
     chrome.storage.local.get("groups", function(data) {
         let groups = data["groups"]; //Enter groups object
 		let groupNames = Object.keys(groups);
-        let sorted = [];
 		//Sorts the groups from highest "freq" to lowest "freq" in 'sorted' array
 		for (groupName of groupNames) {
-			//Loop moves on if the group is already in 'sorted' array
-			if (sorted.includes(groupName)) {
-				continue;
-			}
+			let nameA = groupName;
+			let nameB = null;
+			let indexA = groupNames.indexOf(groupName);
+			let indexB = null;
 			for (groupName2 of groupNames) {
-				if ((groupName.freq < groupName2.freq) && (!sorted.includes(groupName2))) {
-					groupName = groupName2;		
+				if ((groups[groupName].freq < groups[groupName2].freq) && (indexA < groupNames.indexOf(groupName2)) && (nameA !== groupName2)) {
+					nameB = groupName2;
+					indexB = groupNames.indexOf(groupName2);
 				}
 			}
-			sorted.push(groupName);
+			if (nameB !== null) {
+				groupNames[indexA] = nameB;
+			}
+			if (indexB !== null) {
+				groupNames[indexB] = nameA;
+			}
 		}
-		sorted.reverse();
+		
+		//sorted.reverse();
+		for (sort of groupNames){
+			console.log("group: " + sort + " , freq: " + groups[sort].freq);
+		}
 		
         var openGroupButtons = document.getElementById("openGroupButtons");
-        for (groupName of sorted) {
+        for (groupName of groupNames) {
 			let group = groups[groupName];
 			var button = document.createElement("BUTTON");
 			button.id = groupName;
@@ -222,7 +213,7 @@ window.onload = function load(){
 			//Assign listener to open the group
 			button.onclick = function() {
 				openTabs(group);
-				data.groups[groupName]["freq"]++;
+				group["freq"]++;
 				chrome.storage.local.set(data);
 			};
 			openGroupButtons.appendChild(button);
