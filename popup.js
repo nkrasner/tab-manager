@@ -46,7 +46,7 @@ function addToGroup(urls = "", groupName) {
 				for (url of urls){
 					store.push(url);
 				}
-                data.groups[groupName] = store;
+                data.groups[groupName]["urls"] = store;
                 chrome.storage.local.set(data, function() {
                     console.log("Created group: " + groupName);
                     //Reload the popup so the button will appear
@@ -85,7 +85,13 @@ function removeFromGroup(urls = "", groupName) {
 				}
 				data.groups[groupName]["urls"] = newGroup;
 				if (newGroup.length == 0) {
-					removeGroup(groupName);
+					let g = data["groups"];
+					delete g[groupName];
+					data["groups"] = g;
+					chrome.storage.local.get("number", function(data) { 
+						data.number--;
+						chrome.storage.local.set(data);
+					});
 				}
                 chrome.storage.local.set(data, function() {
                     console.log("Removed group: " + groupName);
@@ -133,17 +139,9 @@ function removeGroup(groupName) {
         if (isGroup === true) {
             chrome.storage.local.get("groups", function(data) {
                 //Pull group into groups
-				var newGroup = [];
-	            var list = Object.keys(data["groups"]);
-				for (name of list){
-					if (groupName === name){
-						continue;
-					}
-					else{
-						newGroup.push(name);
-					}
-				}
-				data["groups"] = newGroup; 
+				let g = data["groups"];
+				delete g[groupName];
+				data["groups"] = g;
                 chrome.storage.local.set(data, function() {
                     console.log("Removed group: " + groupName);
                     //Reload the popup so the button will appear
@@ -200,9 +198,9 @@ window.onload = function load(){
 		}
 		
 		//sorted.reverse();
-		for (sort of groupNames){
+		/*for (sort of groupNames){
 			console.log("group: " + sort + " , freq: " + groups[sort].freq);
-		}
+		}*/
 		
         var openGroupButtons = document.getElementById("openGroupButtons");
         for (groupName of groupNames) {
