@@ -1,6 +1,22 @@
 /* Buttons need more room than that, we'll figure it out later */
-//Adds layout for Group - tabs. 
-//Not the finalized version.
+/*Adds layout for Group - tabs. 
+//Not the finalized version."*/
+
+.box{
+  background: #fff;
+  width: 300px;
+  height: 500px;
+  
+  animation-name: back;
+  animation-duration: 1s; 
+}
+
+@keyframes back{
+  0% {background-color: rgb(255, 72, 0);}
+  /*50% {background-color: #999;}*/
+  100% {background-color: #fff;}
+  
+}
 
 .button {
   background-color: #4CAF50; /* Green */
