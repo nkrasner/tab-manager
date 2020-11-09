@@ -8,7 +8,7 @@ html{
 .box{
   /*background: #888;*/
   position: fixed;
-  background-image: linear-gradient(-60deg, rgb(255, 115, 0) 50%, rgb(255, 255, 255) 50%);
+  background-image: linear-gradient(60deg, rgb(255, 115, 0) 50%, rgb(255, 255, 255) 50%);
   bottom:0;
   left:-90%;
   /*opacity:.5;*/
@@ -20,22 +20,14 @@ html{
 
   animation:back 1.5s ease-in-out forwards; 
 }
-/*.box2{
-  background: rgb(255,72,0);
-  position: absolute;
-  width: 300px;
-  height: 50px;
-  
-  animation-name: back;
-  animation-duration: 1s;
-}*/
+
 
 @keyframes back{
   0% {
-    transform:translateX(-25%);
+    transform:translateX(25%);
   }
   100% {
-    transform:translateX(30%);
+    transform:translateX(-30%);
   }
 }
 
