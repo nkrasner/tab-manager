@@ -1,8 +1,8 @@
 /* Buttons need more room than that, we'll figure it out later */
-//Adds layout for Group - tabs. 
-//Not the finalized version.
-
-.button {
+html {
+  width: 300px;
+}
+button {
   background-color: #4CAF50; /* Green */
   border: none;
   color: white;
