@@ -3,14 +3,14 @@
 //Not the finalized version."*/
 html{
   height: 400px;
-  width: 400px;
+  width: 300px;
 }
 .box{
   /*background: #888;*/
   position: fixed;
   background-image: linear-gradient(60deg, rgb(255, 115, 0) 50%, rgb(255, 255, 255) 50%);
   bottom:0;
-  left:-90%;
+  left:-100%;
   /*opacity:.5;*/
   
   right:-90%;
@@ -19,6 +19,34 @@ html{
 
 
   animation:back 1.5s ease-in-out forwards; 
+}
+
+.slideA{
+  position: relative;
+  transform: translateX(110%);
+  animation: slide .3s ease-in-out forwards;
+}
+.slideB{
+  position: relative;
+  transform: translateX(110%);
+  animation: slide .3s ease-in-out forwards;
+  animation-delay: 0.1s;
+}
+.slideC{
+  position: relative;
+  transform: translateX(110%);
+  animation: slide .3s ease-in-out forwards;
+  animation-delay: .2s;
+}
+.slideD{
+  position: relative;
+  transform: translateX(110%);
+  animation: slide .3s ease-in-out forwards;
+  animation-delay: .3s;
+}
+@keyframes slide{
+  0% {transform: translateX(100%);}
+  100%{transform: translateX(0%);}
 }
 
 
