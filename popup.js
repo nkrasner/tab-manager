@@ -172,7 +172,7 @@ function generateButtons(){
     chrome.storage.local.get("groups", function(data) {
         sortedGroupNames(function(groupNames) {
             let groups = data["groups"]; //Enter groups object
-            var openGroupButtons = document.getElementById("openGroupButtons");
+            let openGroupButtons = document.getElementById("openGroupButtons");
 
             for (groupName of groupNames) {
                 //A holder for a group's buttons
@@ -181,12 +181,13 @@ function generateButtons(){
                 let groupButton = Object.assign(document.createElement("button"), {
                     id:groupName,
                     class:"openGroupButton",
-                    innerText:groupName
+                    innerText:groupName,
+                    "groupName":groupName //hold the groupname here so onclick knows which to use
                 });
                 //Assign listener to open the group
                 groupButton.onclick = function() {
-                    openTabs(groups[groupName]["urls"]);
-                    groups[groupName]["freq"]++;
+                    openTabs(groups[groupButton.groupName]["urls"]);
+                    groups[groupButton.groupName]["freq"]++;
                     chrome.storage.local.set({"groups":groups});
                 };
                 groupDiv.appendChild(groupButton);
@@ -196,39 +197,43 @@ function generateButtons(){
                     class:"editGroupButton",
                     innerText:"..."
                 });
-                
+                let dropDown = document.createElement("div");
+                dropDown.style.display = "none";
+                //List urls and buttons to remove each inside dropdown div
+                for (url of groups[groupName]["urls"]) {
+                    let removeURLButton = Object.assign(document.createElement("button"), {
+                        class:"removeURLButton",
+                        innerText:"X",
+                        "url":url,
+                        "groupName":groupName //hold the url and groupname here so onclick function knows which to use
+                    });
+                    removeURLButton.onclick = function() {removeFromGroup(removeURLButton.url, removeURLButton.groupName);};
+                    let urlRemove = document.createElement("p");
+                    urlRemove.class = "urlRemove";
+                    urlRemove.innerText = url;
+                    urlRemove.insertBefore(removeURLButton, urlRemove.childNodes[0]);
+                    dropDown.appendChild(urlRemove);
+                }
+                let addUrlButton = Object.assign(document.createElement("button"), {
+                    class:"addUrlButton",
+                    innerText:"+"
+                });
+                addUrlButton.onclick = function() {addToGroup(JSON.parse("[" + window.prompt("Enter url(s) to add.") + "]"), groupName)};
+
                 //Assign listener to edit the group
                 editButton.onclick = function edit() {
+                    dropDown.style.display = "block";
                     editButton.innerText = " ^ ";
-                    let dropDown = document.createElement("div");
                     editButton.onclick = function() {
-                        groupDiv.removeChild(dropDown);
-                        editButton.onclick = function() { edit(); };
+                        dropDown.style.display = "none";
+                        editButton.onclick = function() {edit();};
                         editButton.innerText = "...";
                     };
-                    //List urls and buttons to remove each
-                    for (url of groups[groupName]["urls"]) {
-                        let removeURLButton = document.createElement("button");
-                        removeURLButton.class = "removeURLButton";
-                        removeURLButton.innerText = "X";
-                        removeURLButton.onclick = function() {
-                            removeFromGroup(url, groupName);
-                        }
-                        let urlRemove = document.createElement("p");
-                        urlRemove.class = "urlRemove";
-                        urlRemove.innerText = url;
-                        urlRemove.insertBefore(removeURLButton, urlRemove.childNodes[0]);
-                        dropDown.appendChild(urlRemove);
-                    }
-                    addUrlButton = Object.assign(document.createElement("button"), {
-                        class:"addUrlButton",
-                        innerText:"+"
-                    });
-                    addUrlButton.onclick = function() {addToGroup(JSON.parse("[" + window.prompt("Enter url(s) to add.") + "]"), groupName)};
-                    dropDown.appendChild(addUrlButton);
-                    groupDiv.appendChild(dropDown);
-                }
+                };
+
                 groupDiv.appendChild(editButton);
+                dropDown.appendChild(addUrlButton);
+                groupDiv.appendChild(dropDown);
 
                 //Append buttons to the div and the div to the document
                 openGroupButtons.appendChild(groupDiv); 
