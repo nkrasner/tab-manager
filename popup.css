@@ -1,11 +1,39 @@
 /* Buttons need more room than that, we'll figure it out later */
-//Adds layout for Group - tabs. 
-//Not the finalized version.
+/*Adds layout for Group - tabs. 
+//Not the finalized version."*/
+html{
+  width: 300px;
+}
+.box{
+  /*background: #888;*/
+  position: fixed;
+  background-image: linear-gradient(60deg, rgb(240, 72, 51) 50%, rgb(255, 115, 0) 50%);
+  bottom:0;
+  left:-90%;
+  /*opacity:.5;*/
+  
+  right:-90%;
+  top:0;
+  z-index:-1;
 
-.button {
-  background-color: #4CAF50; /* Green */
+
+  animation:back 1.5s ease-in-out forwards; 
+}
+
+
+@keyframes back{
+  0% {
+    transform:translateX(25%);
+  }
+  100% {
+    transform:translateX(-30%);
+  }
+}
+
+button {
+  background-color: white/*#4CAF50; /* Green */
   border: none;
-  color: white;
+  color: black;
   padding: 15px 32px;
   text-align: center;
   text-decoration: none;
