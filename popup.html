@@ -2,12 +2,16 @@
   <html>
     <head>
       <link rel="stylesheet" href="popup.css"></link>
-      <button id="editGroupsButton">+|-</button>
+      <div id="headerBox">
+        <button id="editGroups">+|-</button>
+      </div>
     </head>
+    <!-- This box is where the swoop animation plays -->
     <box class="box"></box>
     <body>
-      <button id="addGroup">Add Group</button>
-      <p>Open a tab group.</p>
+      <input id="addGroupText" class="editGroups" style="display:none">
+      <button id="addGroupButton" class="editGroups" style="display:none">Add</button>
+      <!-- Tab Groups Generate in this Div -->
       <div id="openGroupButtons"></div>
       <script src="popup.js"></script>
     </body>

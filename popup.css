@@ -29,19 +29,45 @@ html{
     transform:translateX(-30%);
   }
 }
-
+body {
+  white-space: nowrap;
+}
 button {
   background-color: white/*#4CAF50; /* Green */
   border: none;
   color: black;
-  padding: 15px 32px;
+  padding: 5px;
   text-align: center;
   text-decoration: none;
   display: inline-block;
   font-size: 16px;
 }
 
-.button2 {background-color: #f44336;} /* Red */
+input {
+  display: inline-block;
+  padding: 5px 5px;
+}
+
+#headerBox {
+  background-color: red;
+  margin: -10px;
+  margin-bottom: 10px;
+  height: 48px;
+  box-shadow: 0px 2px 10px black;
+}
+
+#editGroups {
+  padding: 10px;
+  height: 48px;
+  position: absolute;
+  display: block;
+  top: 0;
+  right: 0;
+}
+
+#addGroupButton {
+  padding: 5px 5px;
+} /* Red */
 .button3 {background-color: #f44336;} /* Red */
 .button4 {background-color: #f44336;} /* Red */
 .button5 {background-color: #f44336;} /* Red */

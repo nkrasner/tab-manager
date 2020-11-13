@@ -83,13 +83,12 @@ function removeFromGroup(url = "", groupName) {
 }
 
 //Adds a group with the name and URLs(optional) given
-function addGroup(groupName, urls = "") {
+function addGroup(groupName, urls = []) {
     isGroup(groupName, function(isGroup){
         if (isGroup === false) {
             chrome.storage.local.get("groups", function(data) {
                 //Push group into groups
                 data.groups[groupName] = {};
-
                 data.groups[groupName]["urls"] = urls;
                 data.groups[groupName]["freq"] = 0;
                 chrome.storage.local.set(data, function() {
@@ -167,6 +166,16 @@ function removeGroup(groupName) {
     });
 }
 
+//Take a url and fix it to work in the browser
+function urlify(url){
+    let fixedUrl = url;
+    if (!fixedUrl.startsWith("https://")){
+        fixedUrl = "https://" + fixedUrl;
+    }
+    fixedUrl = JSON.parse("[\"" + fixedUrl + "\"]");
+    return fixedUrl;
+}
+
 //Generate group buttons (and their corresponding edit buttons)
 function generateButtons(){
     chrome.storage.local.get("groups", function(data) {
@@ -184,17 +193,30 @@ function generateButtons(){
                     innerText:groupName,
                     "groupName":groupName //hold the groupname here so onclick knows which to use
                 });
+                //Generate button to remove the group
+                let removeGroupButton = Object.assign(document.createElement("button"), {
+                    id:"remove" + groupName,
+                    className:"editGroups",
+                    innerText:"X",
+                    "groupName":groupName,
+                    style:"display:none"
+                });
                 //Assign listener to open the group
                 groupButton.onclick = function() {
                     openTabs(groups[groupButton.groupName]["urls"]);
                     groups[groupButton.groupName]["freq"]++;
                     chrome.storage.local.set({"groups":groups});
                 };
+                //Assign listener to remove the group
+                removeGroupButton.onclick = function() {
+                    removeGroup(removeGroupButton.groupName);
+                };
+                groupDiv.appendChild(removeGroupButton);
                 groupDiv.appendChild(groupButton);
 
                 let editButton = Object.assign(document.createElement("button"), {
                     id:"edit"+groupName,
-                    class:"editGroupButton",
+                    class:"editUrlsButton",
                     innerText:"..."
                 });
                 let dropDown = document.createElement("div");
@@ -214,12 +236,20 @@ function generateButtons(){
                     urlRemove.insertBefore(removeURLButton, urlRemove.childNodes[0]);
                     dropDown.appendChild(urlRemove);
                 }
+                let addUrlText = Object.assign(document.createElement("input"), {
+                    class:"addUrlText"
+                });
                 let addUrlButton = Object.assign(document.createElement("button"), {
                     class:"addUrlButton",
-                    innerText:"+"
+                    innerText:"Add"
                 });
-                addUrlButton.onclick = function() {addToGroup(JSON.parse("[" + window.prompt("Enter url(s) to add.") + "]"), groupName)};
-
+                addUrlButton.onclick = function() {addToGroup(urlify(addUrlText.value), groupName)};
+                addUrlText.addEventListener("keyup", function(event) {
+                    if (event.keyCode === 13) {
+                        event.preventDefault();
+                        addUrlButton.click();
+                    }
+                });
                 //Assign listener to edit the group
                 editButton.onclick = function edit() {
                     dropDown.style.display = "block";
@@ -232,6 +262,7 @@ function generateButtons(){
                 };
 
                 groupDiv.appendChild(editButton);
+                dropDown.appendChild(addUrlText);
                 dropDown.appendChild(addUrlButton);
                 groupDiv.appendChild(dropDown);
 
@@ -244,15 +275,31 @@ function generateButtons(){
 //Things to do when the popup loads
 window.onload = function load(){
     //Listener for add group button
-    document.getElementById("addGroup").onclick = function() {
-        //This will change later obviously...
-        let groupName = window.prompt("Enter a group name.");
-        let urls = window.prompt("Enter urls in quotes as a comma separated list.");
-        //This requires the user to not make any mistakes or forget "https://""
-        urls = JSON.parse('[' + urls + ']');
-        addGroup(groupName, urls);
+    document.getElementById("addGroupButton").onclick = function() {
+        if (document.getElementById("addGroupText").value != "") {
+            addGroup(document.getElementById("addGroupText").value);
+        }
     };
-
+    document.getElementById("addGroupText").addEventListener("keyup", function(event) {
+        if (event.keyCode === 13) {
+            event.preventDefault();
+            document.getElementById("addGroupButton").click();
+        }
+    });
+    document.getElementById("editGroups").onclick = function edit() {
+        let editers = document.getElementsByClassName("editGroups");
+        for (editer of editers) {
+            editer.style.display = "block";
+        }
+        document.getElementById("editGroups").innerText = "OK";
+        document.getElementById("editGroups").onclick = function() {
+            for (editer of editers) {
+                editer.style.display = "none";
+            }
+            document.getElementById("editGroups").innerText = "+|-";
+            document.getElementById("editGroups").onclick = function() {edit();};
+        };
+    };
     generateButtons();
 
     //Generate button to remove group

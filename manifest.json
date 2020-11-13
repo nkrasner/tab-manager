@@ -7,7 +7,7 @@
                     "storage",
                     "unlimitedStorage"],
     "background": {
-      "scripts": ["background.js"],
+      "scripts": ["urlGraph.js", "background.js"],
       "persistent": false
     },
     "browser_action": {

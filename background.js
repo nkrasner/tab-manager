@@ -1,4 +1,4 @@
-const int MAX_NODES = 1000;
+const MAX_NODES = 1000;
 //Background scripts
 chrome.runtime.onInstalled.addListener(function() {
     chrome.storage.local.clear();
