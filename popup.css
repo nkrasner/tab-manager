@@ -9,7 +9,7 @@ html {
 .box {
   /*background: #888;*/
   position: fixed;
-  background-image: linear-gradient(70deg, rgb(240, 72, 51) 50%, rgb(153, 93, 0) 50%); /*(70deg, rgb(240, 72, 51) 50%, rgb(255, 115, 0) 50%)*/
+  background-image: linear-gradient(70deg, rgb(240, 72, 51) 50%, rgb(255, 115, 0) 50%);
   bottom:0;
   left:-90%;
   /*opacity:.5;*/
@@ -43,11 +43,13 @@ body {
   white-space: nowrap;
 }
 button {
-  background-color: rgb(255, 115, 0);/*#4CAF50; /* Green */
+  background-color: red;/*#4CAF50; /* Green */
   border: none;
   outline: none;
   color: white;
-  padding: 5px;
+  padding: 15px;
+  width: 80%;
+  height: 70px;
   text-align: center;
   text-decoration: none;
   display: inline-block;
@@ -55,11 +57,34 @@ button {
   font-size: 16px;
 }
 
+.editUrlsButton{
+  background-color: red;
+  width:55px;
+}
+
+.addUrlButton{
+  background-color: red;
+  padding: 5px 5px;
+  width:40px;
+  height: 30px;
+}
+
+.removeURLButton{
+  background-color: red;
+  padding: 5px 5px;
+  width:45px;
+  height:30px;
+}
+
 input {
   display: inline-block;
   padding: 5px 5px;
   margin-bottom: 5px;
 }
+
+/*button span {
+  display: none;
+}*/
 
 #headerBox {
   background-color: red;
@@ -71,7 +96,7 @@ input {
 
 #openGroupButtons-empty {
   text-shadow: 2px 2px 5px black;
-  color: rgb(255, 115, 0);
+  color: white;
   position: absolute;
   top: 40%;
   text-align: center;
@@ -84,12 +109,20 @@ input {
   padding: none;
   position: absolute;
   display: table-cell;
-  top: 10px;
+  height: 40px;
+  width: 40px;
+  top: 5px;
   right: 5px;
+
+  background-image: url(images/Check-Mark.png);
+  background-repeat: no-repeat;
+  background-position: 50% 50%;
+  /* put the height and width of your image here */
+  background-size: 35px;
 }
 
 #addGroupButton {
-  padding: 5px 5px;
+  padding: none;
 } /* Red */
 .button3 {background-color: #f44336;} /* Red */
 .button4 {background-color: #f44336;} /* Red */
