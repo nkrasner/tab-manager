@@ -149,7 +149,7 @@ function removeGroup(groupName) {
                 chrome.storage.local.set(data, function() {
                     console.log("Removed group: " + groupName);
                     //Reload the popup so the button will appear
-                    //location.reload();
+                    location.reload();
                 });
             });
             //Changes value of "Number" so it fits the number of existing tab groups
@@ -182,7 +182,9 @@ function generateButtons(){
         sortedGroupNames(function(groupNames) {
             let groups = data["groups"]; //Enter groups object
             let openGroupButtons = document.getElementById("openGroupButtons");
-
+            if (groupNames.length === 0){
+                document.getElementById("openGroupButtons-empty").style.display = "block";
+            }
             for (groupName of groupNames) {
                 //A holder for a group's buttons
                 let groupDiv = document.createElement("div");
@@ -289,7 +291,7 @@ window.onload = function load(){
     document.getElementById("editGroups").onclick = function edit() {
         let editers = document.getElementsByClassName("editGroups");
         for (editer of editers) {
-            editer.style.display = "block";
+            editer.style.display = "table-cell";
         }
         document.getElementById("editGroups").innerText = "OK";
         document.getElementById("editGroups").onclick = function() {
