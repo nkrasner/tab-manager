@@ -6,11 +6,14 @@ chrome.runtime.onInstalled.addListener(function() {
     chrome.storage.local.set({
         "groups":{},
         "urlGraph":new urlGraph(),
-        "number":0
+        "number":0,
+        "edit":false
     });
 });
 
-/*chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
+/*
+
+chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
 
     chrome.storage.local.get("urlGraph", function(urlGraph) {
         if(!urlGraph.isNode(tab.url)) {
@@ -18,4 +21,5 @@ chrome.runtime.onInstalled.addListener(function() {
 
         }
     });
-});*/
+});
+*/

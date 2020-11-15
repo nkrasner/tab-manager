@@ -2,14 +2,17 @@
     "name": "Tab Manager",
     "version": "1.0",
     "description": "Test extension code for use in the Tab Manager.",
-    "permissions": ["tabs",
+    "permissions": [
+                    "tabs",
                     "declarativeContent", 
                     "storage",
-                    "unlimitedStorage"],
+                    "unlimitedStorage"
+                  ],
     "background": {
       "scripts": ["urlGraph.js", "background.js"],
       "persistent": false
     },
+    "options_page": "settings.html",
     "browser_action": {
       "default_popup": "popup.html",
       "default_icon": {

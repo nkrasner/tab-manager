@@ -91,6 +91,7 @@ function addGroup(groupName, urls = []) {
                 data.groups[groupName] = {};
                 data.groups[groupName]["urls"] = urls;
                 data.groups[groupName]["freq"] = 0;
+                data.groups[groupName]["edit"] = false;
                 chrome.storage.local.set(data, function() {
                     console.log("Created group: " + groupName);
                 });
@@ -137,6 +138,12 @@ function sortedGroupNames(callback) {
     });
 }
 
+function removeAllChildNodes(parent) {
+    while (parent.firstChild) {
+        parent.removeChild(parent.firstChild);
+    }
+}
+
 //Will remove a group
 function removeGroup(groupName) {
     isGroup(groupName, function(isGroup){
@@ -176,8 +183,131 @@ function urlify(url){
     return fixedUrl;
 }
 
+function removeAllChildNodes(parent) {
+    while (parent.firstChild) {
+        parent.removeChild(parent.firstChild);
+    }
+}
+
+function reload() {
+    removeAllChildNodes(document.getElementById("openGroupButtons"));
+    load();
+}
+
+function generateGroupDiv(groupName, groups, animDelay, edit, groupDiv = null) {
+    if (groupDiv === null) {
+        groupDiv = Object.assign(document.createElement("div"),{
+            "groupName":groupName, //hold the groupname here so onclicks knows which to use
+            "animDelay":animDelay
+        });
+    }
+    //Generate buttons with attributes corresponding to the group name
+    let groupButton = Object.assign(document.createElement("button"), {
+        id:groupName,
+        className:"openGroupButton",
+        innerText:groupName,
+        style:"animation-delay:."+groupDiv.animDelay+"s"
+    });
+    //Assign listener to open the group
+    groupButton.onclick = function() {
+        openTabs(groups[groupDiv.groupName]["urls"]);
+        groups[groupButton.groupName]["freq"]++;
+        chrome.storage.local.set({"groups":groups});
+    };
+    //Generate button to remove the group
+    let removeGroupButton = Object.assign(document.createElement("button"), {
+        id:"remove" + groupName,
+        className:"editGroups",
+        innerText:"X",
+        "groupName":groupName,
+        style:"display:none"
+    });
+    //Assign listener to remove the group
+    removeGroupButton.onclick = function() {
+        removeGroup(groupDiv.groupName);
+    };
+    //Generate button to edit the group
+    let editButton = Object.assign(document.createElement("button"), {
+        id:"edit"+groupName,
+        className:"editUrlsButton",
+        "groupName":groupName,
+        innerText:"." //hidden period don't remove
+    });
+    if (groups[groupName].edit){
+        editButton.style["background-image"] = "url(images/Check-Mark.png)";
+    } else {
+        editButton.style["background-image"] = "url(images/DotDotDot.png)";
+
+    }
+    //Assign listener to edit the group
+    editButton.onclick = function edit() {
+        if (groups[groupName].edit){
+            groups[groupName].edit = false;
+        } else {
+            groups[groupName].edit = true;
+        }
+        chrome.storage.local.set({groups});
+        reload();
+    };
+    //place buttons in group div
+    groupDiv.appendChild(removeGroupButton);
+    groupDiv.appendChild(groupButton);
+    groupDiv.appendChild(editButton);
+
+    return groupDiv;
+}
+
+function generateDropdown(groupName, groups, edit, dropDown=null) {
+    if (dropDown === null){
+        dropDown = Object.assign(document.createElement("div"), {
+            className:"dropDown",
+            "groupName":groupName //hold the groupname here so onclicks knows which to use
+        });
+    }
+    let animDelay = 0;
+    for (url of groups[groupName]["urls"]) {
+        let removeURLButton = Object.assign(document.createElement("button"), {
+            className:"removeURLButton",
+            innerText:"X",
+            style:"animation-delay:"+animDelay+"s",
+            "url":url //hold the url here so onclick function knows which to use
+        });
+        removeURLButton.onclick = function() {removeFromGroup(removeURLButton.url, dropDown.groupName);};
+        let urlRemove = Object.assign(document.createElement("p"),{
+            class:"urlRemove",
+            innerText:url,
+            style:"animation-delay:"+animDelay+"s"
+        });
+        urlRemove.insertBefore(removeURLButton, urlRemove.childNodes[0]);
+        dropDown.appendChild(urlRemove);
+        animDelay = animDelay + 0.1;
+    }
+    let addUrlText = Object.assign(document.createElement("input"), {
+        className:"addUrlText"
+    });
+    let addUrlButton = Object.assign(document.createElement("button"), {
+        className:"addUrlButton",
+        innerText:"Add"
+    });
+    addUrlButton.onclick = function() {addToGroup(urlify(addUrlText.value), dropDown.groupName)};
+    addUrlText.addEventListener("keyup", function(event) {
+        if (event.keyCode === 13) {
+            event.preventDefault();
+            addUrlButton.click();
+        }
+    });
+    dropDown.appendChild(addUrlText);
+    dropDown.appendChild(addUrlButton);
+    if (groups[groupName].edit) {
+        dropDown.style.display = "block";
+    } else {
+        dropDown.style.display = "none";
+    }
+    return dropDown;
+}
+
 //Generate group buttons (and their corresponding edit buttons)
-function generateButtons(){
+function generateButtons(edit = false){
     chrome.storage.local.get("groups", function(data) {
         sortedGroupNames(function(groupNames) {
             let groups = data["groups"]; //Enter groups object
@@ -185,124 +315,77 @@ function generateButtons(){
             if (groupNames.length === 0){
                 document.getElementById("openGroupButtons-empty").style.display = "block";
             }
+            let animDelay = 0;
             for (groupName of groupNames) {
                 //A holder for a group's buttons
-                let groupDiv = document.createElement("div");
-                //Generate buttons with attributes corresponding to the group name
-                let groupButton = Object.assign(document.createElement("button"), {
-                    id:groupName,
-                    class:"openGroupButton",
-                    innerText:groupName,
-                    "groupName":groupName //hold the groupname here so onclick knows which to use
-                });
-                //Generate button to remove the group
-                let removeGroupButton = Object.assign(document.createElement("button"), {
-                    id:"remove" + groupName,
-                    className:"editGroups",
-                    innerText:"X",
-                    "groupName":groupName,
-                    style:"display:none"
-                });
-                //Assign listener to open the group
-                groupButton.onclick = function() {
-                    openTabs(groups[groupButton.groupName]["urls"]);
-                    groups[groupButton.groupName]["freq"]++;
-                    chrome.storage.local.set({"groups":groups});
-                };
-                //Assign listener to remove the group
-                removeGroupButton.onclick = function() {
-                    removeGroup(removeGroupButton.groupName);
-                };
-                groupDiv.appendChild(removeGroupButton);
-                groupDiv.appendChild(groupButton);
-
-                let editButton = Object.assign(document.createElement("button"), {
-                    id:"edit"+groupName,
-                    class:"editUrlsButton",
-                    innerText:"..."
-                });
-                let dropDown = document.createElement("div");
-                dropDown.style.display = "none";
-                //List urls and buttons to remove each inside dropdown div
-                for (url of groups[groupName]["urls"]) {
-                    let removeURLButton = Object.assign(document.createElement("button"), {
-                        class:"removeURLButton",
-                        innerText:"X",
-                        "url":url,
-                        "groupName":groupName //hold the url and groupname here so onclick function knows which to use
-                    });
-                    removeURLButton.onclick = function() {removeFromGroup(removeURLButton.url, removeURLButton.groupName);};
-                    let urlRemove = document.createElement("p");
-                    urlRemove.class = "urlRemove";
-                    urlRemove.innerText = url;
-                    urlRemove.insertBefore(removeURLButton, urlRemove.childNodes[0]);
-                    dropDown.appendChild(urlRemove);
-                }
-                let addUrlText = Object.assign(document.createElement("input"), {
-                    class:"addUrlText"
-                });
-                let addUrlButton = Object.assign(document.createElement("button"), {
-                    class:"addUrlButton",
-                    innerText:"Add"
-                });
-                addUrlButton.onclick = function() {addToGroup(urlify(addUrlText.value), groupName)};
-                addUrlText.addEventListener("keyup", function(event) {
-                    if (event.keyCode === 13) {
-                        event.preventDefault();
-                        addUrlButton.click();
-                    }
-                });
-                //Assign listener to edit the group
-                editButton.onclick = function edit() {
-                    dropDown.style.display = "block";
-                    editButton.innerText = " ^ ";
-                    editButton.onclick = function() {
-                        dropDown.style.display = "none";
-                        editButton.onclick = function() {edit();};
-                        editButton.innerText = "...";
-                    };
-                };
-
-                groupDiv.appendChild(editButton);
-                dropDown.appendChild(addUrlText);
-                dropDown.appendChild(addUrlButton);
+                let groupDiv = generateGroupDiv(groupName, groups, animDelay, edit);
+                let dropDown = generateDropdown(groupName, groups, edit);
                 groupDiv.appendChild(dropDown);
-
-                //Append buttons to the div and the div to the document
-                openGroupButtons.appendChild(groupDiv); 
+                //Append the div to the document
+                openGroupButtons.appendChild(groupDiv);
+                if (edit){
+                    for (element of document.getElementsByClassName("editGroups")) {
+                       element.style.display = "table-cell";
+                    }
+                }
+                animDelay = animDelay + 1;
             }
         });
     });
 }
+
 //Things to do when the popup loads
-window.onload = function load(){
-    //Listener for add group button
-    document.getElementById("addGroupButton").onclick = function() {
-        if (document.getElementById("addGroupText").value != "") {
-            addGroup(document.getElementById("addGroupText").value);
-        }
-    };
-    document.getElementById("addGroupText").addEventListener("keyup", function(event) {
-        if (event.keyCode === 13) {
-            event.preventDefault();
-            document.getElementById("addGroupButton").click();
-        }
-    });
-    document.getElementById("editGroups").onclick = function edit() {
+window.onload = function(){load()};
+function load(){
+    chrome.storage.local.get("edit", function(edit) {
+        edit = edit.edit; //true if editing groups
+        //Listener for add group button
+        document.getElementById("addGroupButton").onclick = function() {
+            if (document.getElementById("addGroupText").value != "") {
+                addGroup(document.getElementById("addGroupText").value);
+                reload();
+            }
+        };
+        document.getElementById("addGroupText").addEventListener("keyup", function(event) {
+            if (event.keyCode === 13) {
+                event.preventDefault();
+                document.getElementById("addGroupButton").click();
+            }
+        });
+
+        generateButtons(edit);
+
         let editers = document.getElementsByClassName("editGroups");
-        for (editer of editers) {
-            editer.style.display = "table-cell";
-        }
-        document.getElementById("editGroups").innerText = "OK";
-        document.getElementById("editGroups").onclick = function() {
+        if (edit) {
+            for (editer of editers) {
+                editer.style.display = "table-cell";
+            }
+            document.getElementById("editGroups").style["background-image"] = "url(images/Check-Mark.png)";
+        } else {
             for (editer of editers) {
                 editer.style.display = "none";
             }
-            document.getElementById("editGroups").innerText = "+|-";
-            document.getElementById("editGroups").onclick = function() {edit();};
+            document.getElementById("editGroups").style["background-image"] = "url(images/PlusMinus.png)";
+        }
+        document.getElementById("editGroups").onclick = function edit() {
+            chrome.storage.local.get("edit", function(isEdit) {
+                isEdit = isEdit.edit; //true if editing groups
+                if (isEdit) {
+                    for (editer of editers) {
+                        editer.style.display = "none";
+                    }
+                    chrome.storage.local.set({"edit":false});
+                    document.getElementById("editGroups").style["background-image"] = "url(images/PlusMinus.png";
+                } else {
+                    for (editer of editers) {
+                        editer.style.display = "table-cell";
+                    }
+                    chrome.storage.local.set({"edit":true});
+                    document.getElementById("editGroups").style["background-image"] = "url(images/Check-Mark.png)";
+                }
+            });
         };
-    };
-    generateButtons();
+    });
 
     //Generate button to remove group
 	/*if (true) {
@@ -316,4 +399,4 @@ window.onload = function load(){
 			removeGroup(groupName);
 		};
 	}*/
-};
+}
