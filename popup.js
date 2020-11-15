@@ -233,7 +233,7 @@ function generateGroupDiv(groupName, groups, animDelay, edit, groupDiv = null) {
         "groupName":groupName,
         innerText:"." //hidden period don't remove
     });
-    if (groups[groupName].edit){
+    if (typeof groups[groupName] !== "undefined" && groups[groupName].edit){
         editButton.style["background-image"] = "url(images/Check-Mark.png)";
     } else {
         editButton.style["background-image"] = "url(images/DotDotDot.png)";
@@ -265,22 +265,24 @@ function generateDropdown(groupName, groups, edit, dropDown=null) {
         });
     }
     let animDelay = 0;
-    for (url of groups[groupName]["urls"]) {
-        let removeURLButton = Object.assign(document.createElement("button"), {
-            className:"removeURLButton",
-            innerText:"X",
-            style:"animation-delay:"+animDelay+"s",
-            "url":url //hold the url here so onclick function knows which to use
-        });
-        removeURLButton.onclick = function() {removeFromGroup(removeURLButton.url, dropDown.groupName);};
-        let urlRemove = Object.assign(document.createElement("p"),{
-            class:"urlRemove",
-            innerText:url,
-            style:"animation-delay:"+animDelay+"s"
-        });
-        urlRemove.insertBefore(removeURLButton, urlRemove.childNodes[0]);
-        dropDown.appendChild(urlRemove);
-        animDelay = animDelay + 0.1;
+    if (typeof groups[groupName] !== "undefined"){
+        for (url of groups[groupName]["urls"]) {
+            let removeURLButton = Object.assign(document.createElement("button"), {
+                className:"removeURLButton",
+                innerText:"X",
+                style:"animation-delay:"+animDelay+"s",
+                "url":url //hold the url here so onclick function knows which to use
+            });
+            removeURLButton.onclick = function() {removeFromGroup(removeURLButton.url, dropDown.groupName);};
+            let urlRemove = Object.assign(document.createElement("p"),{
+                class:"urlRemove",
+                innerText:url,
+                style:"animation-delay:"+animDelay+"s"
+            });
+            urlRemove.insertBefore(removeURLButton, urlRemove.childNodes[0]);
+            dropDown.appendChild(urlRemove);
+            animDelay = animDelay + 0.1;
+        }
     }
     let addUrlText = Object.assign(document.createElement("input"), {
         className:"addUrlText"
@@ -298,9 +300,10 @@ function generateDropdown(groupName, groups, edit, dropDown=null) {
     });
     dropDown.appendChild(addUrlText);
     dropDown.appendChild(addUrlButton);
-    if (groups[groupName].edit) {
+
+    if (typeof groups[groupName] !== "undefined" && groups[groupName].edit) {
         dropDown.style.display = "block";
-    } else {
+    } else if (typeof groups[groupName] !== "undefined") {
         dropDown.style.display = "none";
     }
     return dropDown;
