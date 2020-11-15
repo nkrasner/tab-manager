@@ -2,17 +2,15 @@
 <html>
 	<head>
 		<link rel="stylesheet" href="popup.css"></link>
-		<div id="headerBox">
-			<button id="editGroups"></button>
-		</div>
 	</head>
 	<div class="innerShadow"></div>
 	<box class="box"></box>
-	<body>
-		<input id="addGroupText" class="editGroups" style="display:none">
-		<div class="custom-select" style="width:200px;">
+	<body id="settingsSelections">
+		<div id="decayRate" style="width:200px;">
+      <h3>Decay Rate</h3>
+      <input type="number" value="0"></input>
 			<select>
-				<option value="0">Select time:</option>
+				<option value="0">Select timestep:</option>
 				<option value="1">Seconds</option>
 				<option value="2">Minutes</option>
 				<option value="3">Days</option>

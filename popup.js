@@ -22,7 +22,7 @@ function numGroups(callback) {
 }
 
 //Checks if a group exists witha given name (asynchronous)
-function isGroup(groupName, callback) {
+function isGroup(groupName, callback) { //FOR TESTING TIME: When a group is added that already exists, this breaks
     chrome.storage.local.get("groups", function(data) {
         isGroup = false;
         let groupNames = Object.keys(data["groups"]);
@@ -340,6 +340,7 @@ function generateButtons(edit = false){
 //Things to do when the popup loads
 window.onload = function(){load()};
 function load(){
+    document.getElementById("settingsButton").onclick = function(){chrome.runtime.openOptionsPage()};
     chrome.storage.local.get("edit", function(edit) {
         edit = edit.edit; //true if editing groups
         //Listener for add group button
@@ -389,17 +390,4 @@ function load(){
             });
         };
     });
-
-    //Generate button to remove group
-	/*if (true) {
-		let removeGroupButton = document.getElementById("removeGroupButton");
-		var button = document.createElement("BUTTON");
-		button.innerText = 'remove';
-		removeGroupButton.appendChild(button);
-		button.onclick = function() {
-			let groupName = window.prompt("Enter a group name.");
-			groupName = JSON.parse(groupName);
-			removeGroup(groupName);
-		};
-	}*/
 }

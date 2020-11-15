@@ -201,6 +201,23 @@ input {
   animation-delay: .1s;
 }
 
+#settingsButton {
+  width: 40px;
+  height: 40px;
+  padding: none;
+  display: table-cell;
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  border-radius: 40px;
+
+  background-image: url(images/icon48.png);/*(images/Check-Mark.png);*/
+  background-repeat: no-repeat;
+  background-position: 50% 50%;
+  /* put the height and width of your image here */
+  background-size: 40px;
+}
+
 #headerBox {
   background-color: red;
   margin: -10px -10px 0px -10px;
@@ -227,7 +244,7 @@ input {
   position: absolute;
   display: table-cell;
   height: 45px;
-  width: 48px;
+  width: 45px;
   top: 0px;
   right: 0px;
 
