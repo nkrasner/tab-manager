@@ -90,7 +90,12 @@ function addGroup(groupName, urls = []) {
                 //Push group into groups
                 data.groups[groupName] = {};
                 data.groups[groupName]["urls"] = urls;
-                data.groups[groupName]["freq"] = 0;
+                data.groups[groupName]["priority"] = 0;
+                for (group in data.groups) {
+                    if (group !== groupName) {
+                        data.groups[group].priority++;
+                    }
+                }
                 data.groups[groupName]["edit"] = false;
                 chrome.storage.local.set(data, function() {
                     console.log("Created group: " + groupName);
@@ -110,19 +115,19 @@ function addGroup(groupName, urls = []) {
     });
 }
 
-//Returns a sorted array (by frequency) of groupnames
+//Returns a sorted array (by priority) of groupnames
 function sortedGroupNames(callback) {
     chrome.storage.local.get("groups", function(data) {
         let groups = data["groups"]; //Enter groups object
         let groupNames = Object.keys(groups);
-        //Sorts the groups from highest "freq" to lowest "freq" in 'sorted' array
+        //Sorts the groups from highest "priority" to lowest "priority" in 'sorted' array
         for (groupName of groupNames) {
             let nameA = groupName;
             let nameB = null;
             let indexA = groupNames.indexOf(groupName);
             let indexB = null;
             for (groupName2 of groupNames) {
-                if ((groups[groupName].freq < groups[groupName2].freq) && (indexA < groupNames.indexOf(groupName2)) && (nameA !== groupName2)) {
+                if ((groups[groupName].priority > groups[groupName2].priority) && (indexA < groupNames.indexOf(groupName2)) && (nameA !== groupName2)) {
                     nameB = groupName2;
                     indexB = groupNames.indexOf(groupName2);
                 }
@@ -176,7 +181,7 @@ function removeGroup(groupName) {
 //Take a url and fix it to work in the browser
 function urlify(url){
     let fixedUrl = url;
-    if (!fixedUrl.startsWith("https://")){
+    if (!fixedUrl.startsWith("http")){
         fixedUrl = "https://" + fixedUrl;
     }
     fixedUrl = JSON.parse("[\"" + fixedUrl + "\"]");
@@ -192,6 +197,20 @@ function removeAllChildNodes(parent) {
 function reload() {
     removeAllChildNodes(document.getElementById("openGroupButtons"));
     load();
+}
+
+
+function replaceUrl(groupName, oldUrl, newUrl, callback=null) {
+    chrome.storage.local.get("groups", function(data) {
+        groups = data.groups;
+        let urls = data.groups[groupName].urls;
+        urls.splice(urls.indexOf(oldUrl), 1, newUrl); //changes first occurence of this url (maybe fix, not to important)
+        chrome.storage.local.set({groups}, function() {
+            if (callback !== null) {
+                callback();
+            }
+        });
+    });
 }
 
 function generateGroupDiv(groupName, groups, animDelay, edit, groupDiv = null) {
@@ -211,7 +230,12 @@ function generateGroupDiv(groupName, groups, animDelay, edit, groupDiv = null) {
     //Assign listener to open the group
     groupButton.onclick = function() {
         openTabs(groups[groupDiv.groupName]["urls"]);
-        groups[groupButton.groupName]["freq"]++;
+        for (group in groups) {
+            if (groups[group].priority < groups[groupDiv.groupName].priority) {
+                groups[group].priority++;
+            }
+        }
+        groups[groupDiv.groupName]["priority"] = 0;
         chrome.storage.local.set({"groups":groups});
     };
     //Generate button to remove the group
@@ -274,18 +298,30 @@ function generateDropdown(groupName, groups, edit, dropDown=null) {
                 "url":url //hold the url here so onclick function knows which to use
             });
             removeURLButton.onclick = function() {removeFromGroup(removeURLButton.url, dropDown.groupName);};
-            let urlRemove = Object.assign(document.createElement("p"),{
-                class:"urlRemove",
-                innerText:url,
-                style:"animation-delay:"+animDelay+"s"
+            let urlRemove = Object.assign(document.createElement("input"),{
+                className:"urlRemove",
+                value:url,
+                style:"animation-delay:"+animDelay+"s",
+                "url":url //hold the url here so listener function knows which to use
             });
-            urlRemove.insertBefore(removeURLButton, urlRemove.childNodes[0]);
+            urlRemove.addEventListener("keyup", function(event) {
+                if (event.keyCode === 13 && urlRemove.value !== urlRemove.url) {
+                    event.preventDefault();
+                    replaceUrl(dropDown.groupName, urlRemove.url, urlRemove.value, function() {
+                        reload();
+                    });
+                }
+            });
+            //urlRemove.insertBefore(removeURLButton, urlRemove.childNodes[0]);
+            dropDown.appendChild(removeURLButton);
             dropDown.appendChild(urlRemove);
+            dropDown.appendChild(document.createElement("br"));
             animDelay = animDelay + 0.1;
         }
     }
     let addUrlText = Object.assign(document.createElement("input"), {
-        className:"addUrlText"
+        className:"addUrlText",
+        placeholder:"Add a url..."
     });
     let addUrlButton = Object.assign(document.createElement("button"), {
         className:"addUrlButton",

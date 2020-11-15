@@ -3,7 +3,7 @@
 Not the finalized version."*/
 html {
   width: 300px;
-  height: 400px;
+  /*height: 400px;*/
   user-select: none; /*The user cannot highlight the text and see our hacky-ness*/
 }
 
@@ -88,6 +88,15 @@ html {
     transform:translateX(-30%);
   }
 }
+
+@keyframes slideOpen {
+  0% {
+    height: 0;
+  }
+  100%{
+    height: 400px;
+  }
+}
 /************************************************************************************************************************/
 body {
   white-space: nowrap;
@@ -165,10 +174,11 @@ button {
   position: relative;
 }
 #openGroupButtons{
-  height: 400px;
+  height: 0px;
   overflow: scroll;
 
   position: relative;
+  animation: slideOpen .3s ease-in-out forwards;
 }
 
 #openGroupButtons:after {
@@ -180,7 +190,7 @@ button {
   pointer-events: none;
   background-image: linear-gradient(to bottom, rgba(240, 72, 51, 0), rgba(240, 72, 51, 1) 90%);
   width: 100%;
-  height: 100px;/*4em;*/
+  height: 100px;
 }
 
 button.editGroups {
@@ -199,6 +209,11 @@ input {
   transform: translateX(-110%);
   animation: slideRight .3s ease-in-out forwards;
   animation-delay: .1s;
+}
+
+.urlRemove {
+  transform: translateX(110%);
+  animation: slideLeft .3s ease-in-out forwards;
 }
 
 #settingsButton {
