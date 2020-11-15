@@ -10,13 +10,14 @@
 	<box class="box"></box>
 	<body>
 		<input id="addGroupText" class="editGroups" style="display:none">
-		<button id="addGroupButton" class="editGroups" style="display:none">Add</button>
-      <!-- Tab Groups Generate in this Div -->
-      <div id="openGroupButtons"></div>
-      <div id="openGroupButtons-empty" style="display:none">
-        <h2>Your tab groups will appear here.</h2>
-        <h3>Add some groups to get started.</h3>
-      </div>
+		<div class="custom-select" style="width:200px;">
+			<select>
+				<option value="0">Select car:</option>
+				<option value="1">Seconds</option>
+				<option value="2">Minutes</option>
+				<option value="3">Days</option>
+			</select>
+		</div>
       <script src="popup.js"></script>
 	</body>
 </html>
