@@ -1,6 +1,22 @@
 <!DOCTYPE html>
-  <html>
-    <body>
-      hello world.
-    </body>
-  </html>
+<html>
+	<head>
+		<link rel="stylesheet" href="popup.css"></link>
+		<div id="headerBox">
+			<button id="editGroups"></button>
+		</div>
+	</head>
+	<div class="innerShadow"></div>
+	<box class="box"></box>
+	<body>
+		<input id="addGroupText" class="editGroups" style="display:none">
+		<button id="addGroupButton" class="editGroups" style="display:none">Add</button>
+      <!-- Tab Groups Generate in this Div -->
+      <div id="openGroupButtons"></div>
+      <div id="openGroupButtons-empty" style="display:none">
+        <h2>Your tab groups will appear here.</h2>
+        <h3>Add some groups to get started.</h3>
+      </div>
+      <script src="popup.js"></script>
+	</body>
+</html>
