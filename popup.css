@@ -323,7 +323,5 @@ label {
 
 .saveButton:active {
   background-color: #B22222;
-  box-shadow: 0 5px #666;
-  transform: translateY(4px);
-  
+  box-shadow: 0px 5px 20px black;
 }
