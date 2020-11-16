@@ -312,9 +312,18 @@ label {
   outline: none;
 }
 
-#saveButton {
+.saveButton {
   position: relative;
   left: 35%;
   top: 50%;
   width: 400px;
+}
+
+.saveButton:hover {background-color: #B22222}
+
+.saveButton:active {
+  background-color: #B22222;
+  box-shadow: 0 5px #666;
+  transform: translateY(4px);
+  
 }
