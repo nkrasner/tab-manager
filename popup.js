@@ -376,54 +376,63 @@ function generateButtons(edit = false){
 //Things to do when the popup loads
 window.onload = function(){load()};
 function load(){
-    document.getElementById("settingsButton").onclick = function(){chrome.runtime.openOptionsPage()};
-    chrome.storage.local.get("edit", function(edit) {
-        edit = edit.edit; //true if editing groups
-        //Listener for add group button
-        document.getElementById("addGroupButton").onclick = function() {
-            if (document.getElementById("addGroupText").value != "") {
-                addGroup(document.getElementById("addGroupText").value);
-                reload();
-            }
-        };
-        document.getElementById("addGroupText").addEventListener("keyup", function(event) {
-            if (event.keyCode === 13) {
-                event.preventDefault();
-                document.getElementById("addGroupButton").click();
-            }
-        });
-
-        generateButtons(edit);
-
-        let editers = document.getElementsByClassName("editGroups");
-        if (edit) {
-            for (editer of editers) {
-                editer.style.display = "table-cell";
-            }
-            document.getElementById("editGroups").style["background-image"] = "url(images/Check-Mark.png)";
-        } else {
-            for (editer of editers) {
-                editer.style.display = "none";
-            }
-            document.getElementById("editGroups").style["background-image"] = "url(images/PlusMinus.png)";
-        }
-        document.getElementById("editGroups").onclick = function edit() {
-            chrome.storage.local.get("edit", function(isEdit) {
-                isEdit = isEdit.edit; //true if editing groups
-                if (isEdit) {
-                    for (editer of editers) {
-                        editer.style.display = "none";
-                    }
-                    chrome.storage.local.set({"edit":false});
-                    document.getElementById("editGroups").style["background-image"] = "url(images/PlusMinus.png";
-                } else {
-                    for (editer of editers) {
-                        editer.style.display = "table-cell";
-                    }
-                    chrome.storage.local.set({"edit":true});
-                    document.getElementById("editGroups").style["background-image"] = "url(images/Check-Mark.png)";
+    chrome.storage.local.get("settings", function(data) {
+        settings = data.settings;
+        root = document.getElementsByTagName("html")[0];
+        //eww so much string stuff... BUT IT WORKS!!!
+        slideTime = window.getComputedStyle(root).getPropertyValue("--slideTime").substring(0,window.getComputedStyle(root).getPropertyValue("--slideTime").indexOf("s")).trim();
+        backTime = window.getComputedStyle(root).getPropertyValue("--backTime").substring(0,window.getComputedStyle(root).getPropertyValue("--backTime").indexOf("s")).trim()
+        root.style.setProperty("--slideTime", " " + slideTime/settings.animSpeed + "s");
+        root.style.setProperty("--backTime", " " + backTime/settings.animSpeed + "s");
+        document.getElementById("settingsButton").onclick = function(){chrome.runtime.openOptionsPage()};
+        chrome.storage.local.get("edit", function(edit) {
+            edit = edit.edit; //true if editing groups
+            //Listener for add group button
+            document.getElementById("addGroupButton").onclick = function() {
+                if (document.getElementById("addGroupText").value != "") {
+                    addGroup(document.getElementById("addGroupText").value);
+                    reload();
+                }
+            };
+            document.getElementById("addGroupText").addEventListener("keyup", function(event) {
+                if (event.keyCode === 13) {
+                    event.preventDefault();
+                    document.getElementById("addGroupButton").click();
                 }
             });
-        };
+
+            generateButtons(edit);
+
+            let editers = document.getElementsByClassName("editGroups");
+            if (edit) {
+                for (editer of editers) {
+                    editer.style.display = "table-cell";
+                }
+                document.getElementById("editGroups").style["background-image"] = "url(images/Check-Mark.png)";
+            } else {
+                for (editer of editers) {
+                    editer.style.display = "none";
+                }
+                document.getElementById("editGroups").style["background-image"] = "url(images/PlusMinus.png)";
+            }
+            document.getElementById("editGroups").onclick = function edit() {
+                chrome.storage.local.get("edit", function(isEdit) {
+                    isEdit = isEdit.edit; //true if editing groups
+                    if (isEdit) {
+                        for (editer of editers) {
+                            editer.style.display = "none";
+                        }
+                        chrome.storage.local.set({"edit":false});
+                        document.getElementById("editGroups").style["background-image"] = "url(images/PlusMinus.png";
+                    } else {
+                        for (editer of editers) {
+                            editer.style.display = "table-cell";
+                        }
+                        chrome.storage.local.set({"edit":true});
+                        document.getElementById("editGroups").style["background-image"] = "url(images/Check-Mark.png)";
+                    }
+                });
+            };
+        });
     });
 }

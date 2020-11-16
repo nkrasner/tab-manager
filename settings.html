@@ -2,21 +2,22 @@
 <html>
 	<head>
 		<link rel="stylesheet" href="popup.css"></link>
+    <script src="settings.js"></script>
 	</head>
-	<div class="innerShadow"></div>
+	<div class="innerShadowSettings"></div>
 	<box class="box"></box>
-	<body id="settingsSelections">
-		<div id="decayRate" style="width:200px;">
-      <h3>Decay Rate</h3>
-      <input type="number" value="0"></input>
-			<select>
-				<option value="0">Select timestep:</option>
-				<option value="1">Seconds</option>
-				<option value="2">Minutes</option>
-				<option value="3">Days</option>
-			</select>
-      
-		</div>
-      <script src="popup.js"></script>
+	<body>
+    <div id="settingsSelections">
+      <label for="animationSpeed">Animation Speed:</label>
+  		<select id="animationSpeed">
+        <option value="0.25">0.25x</option>
+  			<option value="0.5">0.5x</option>
+  			<option value="1">1x</option>
+  			<option value="2">2x</option>
+  			<option value="4">4x</option>
+  		</select>
+      <br>
+      <button id="saveButton">Save</button>
+    </div>
 	</body>
 </html>

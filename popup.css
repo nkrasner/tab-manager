@@ -5,6 +5,8 @@ html {
   width: 300px;
   /*height: 400px;*/
   user-select: none; /*The user cannot highlight the text and see our hacky-ness*/
+  --slideTime: .3s;
+  --backTime: 1.5s;
 }
 
 .box {
@@ -20,7 +22,7 @@ html {
   z-index:-3;
 
 
-  animation:back 1.5s ease-in-out forwards; 
+  animation:back var(--backTime) ease-in-out forwards; 
 }
 
 /* width */
@@ -105,7 +107,7 @@ body {
 p {
   position: relative;
   transform: translateX(110%);
-  animation: slideLeft .3s ease-in-out forwards;
+  animation: slideLeft var(--slideTime) ease-in-out forwards;
   animation-delay: .1s;
 }
 
@@ -127,7 +129,7 @@ button {
   opacity: 0;
   position: relative;
   transform: translateX(110%);
-  animation: slideLeft .3s ease-in-out forwards;
+  animation: slideLeft var(--slideTime) ease-in-out forwards;
   animation-delay: .1s;
 }
 
@@ -164,7 +166,7 @@ button {
 
   position: relative;
   transform: translateX(110%);
-  animation: slideLeft .3s ease-in-out forwards;
+  animation: slideLeft var(--slideTime) ease-in-out forwards;
   animation-delay: .1s;
 }
 
@@ -178,7 +180,7 @@ button {
   overflow: scroll;
 
   position: relative;
-  animation: slideOpen .3s ease-in-out forwards;
+  animation: slideOpen var(--slideTime) ease-in-out forwards;
 }
 
 #openGroupButtons:after {
@@ -207,13 +209,13 @@ input {
   opacity: 0;
   position: relative;
   transform: translateX(-110%);
-  animation: slideRight .3s ease-in-out forwards;
+  animation: slideRight var(--slideTime) ease-in-out forwards;
   animation-delay: .1s;
 }
 
 .urlRemove {
   transform: translateX(110%);
-  animation: slideLeft .3s ease-in-out forwards;
+  animation: slideLeft var(--slideTime) ease-in-out forwards;
 }
 
 #settingsButton {
@@ -275,3 +277,44 @@ input {
   height: 30px;
   padding: none;/*5px 5px;*/
 } /* Red */
+
+
+/* Option Page Style */
+.innerShadowSettings {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  z-index: -2;
+  box-shadow: inset 0px 0px 400px 100px rgb(240, 72, 51);
+}
+
+#settingsSelections {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+}
+
+label {
+  position: relative;
+  left: 35%;
+  top: 40%;
+  font-size: 40px;
+  font-weight: bold;
+}
+
+#animationSpeed {
+  position: relative;
+  left: 35%;
+  top: 40%;
+  font-size: 40px;
+  box-shadow: 0px 0px 5px black;
+  border: none;
+  outline: none;
+}
+
+#saveButton {
+  position: relative;
+  left: 35%;
+  top: 50%;
+  width: 400px;
+}

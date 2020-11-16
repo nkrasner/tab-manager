@@ -6,6 +6,9 @@ chrome.runtime.onInstalled.addListener(function() {
     chrome.storage.local.set({
         "groups":{},
         "number":0,
-        "edit":false
+        "edit":false,
+        "settings":{
+            "animSpeed":1
+        }
     });
 });
