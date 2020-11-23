@@ -1,0 +1,32 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+	"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+	<head>
+		<title>Tab Manager Tests</title>
+
+		<link rel="shortcut icon" type="image/png" href="testing/jasmine/lib/jasmine-3.6.0/jasmine_favicon.png">
+		<link rel="stylesheet" type="text/css" href="testing/jasmine/lib/jasmine-3.6.0/jasmine.css">
+
+		<script src="testing/jasmine/lib/jasmine-3.6.0/jasmine.js"></script>
+		<script src="testing/jasmine/lib/jasmine-3.6.0/jasmine-html.js"></script>
+		<script src="testing/jasmine/lib/jasmine-3.6.0/boot.js"></script>
+
+		<!-- include spec files here -->
+		<!-- a test script for the functions which occur on load -->
+		<script src="testing/spec/load_spec.js"></script>
+
+		<!-- source files to be tested  -->
+		<script src="background.js"></script>
+		<script src="popup.js"></script>
+		<script src="settings.js"></script>
+
+		<script src="testing/loadjasmine.js"></script>
+
+	</head>
+
+	<body>
+		<button id="loadjasmine">Load Jasmine</button>
+		<button id="runtests">Run Tests</button>
+	</body>
+
+</html>

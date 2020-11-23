@@ -9,7 +9,7 @@
                     "unlimitedStorage"
                   ],
     "background": {
-      "scripts": ["urlGraph.js", "background.js"],
+      "scripts": ["background.js"],
       "persistent": false
     },
     "options_page": "settings.html",

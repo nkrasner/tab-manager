@@ -1,4 +1,3 @@
-
 //Background scripts
 chrome.runtime.onInstalled.addListener(function() {
     chrome.storage.local.clear();

@@ -7,4 +7,7 @@ window.onload = function load(){
             chrome.storage.local.set({settings});
         };
     });
+    if (true) { //make this true for testing mode
+    	document.getElementById("testing").style.display = "block";
+    }
 }
